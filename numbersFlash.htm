@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>Numbers Control</title>
+</head>
+<body>
+<?
+//$arNumbers = array_merge(array('00', '0', '01', '02', '03', '04', '05', '06', '07', '08', '09'), range(10, 99) );
+//shuffle($arNumbers);
+////$arNumbers = array_slice($arNumbers, 0, 20);
+//$strNumbers = ( '"'.implode('","', $arNumbers).'"' );
+?>
+<style>#placeholderNumber{font-family: Verdana; font-size: 22; font-weight: bold}</style>
+<p id="placeholderNumber"></p>
+<p>
+<button id="startButton" onclick="doTimer()">Go</button>
+</p>
+<p>
+Only this numbers:<input type="text" id="numbersList" value="" size="30">
+</p>
+
+
+<script>
+var counter = 0;
+var proceed = false;
+var timeDelay = 1500;
+//var arNumbers = Array(101);
+var phNumber = document.getElementById('placeholderNumber');
+var startButton = document.getElementById('startButton');
+
+function getNumbersAll(){
+	var arNumbers = ["00","0","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99"];
+	return arNumbers;
+}
+
+function getNumbers(){
+	var strNumbers = numbersList.value.replace(/\s/g, "");
+	arNumbers = strNumbers.split(',');
+	if(arNumbers.length >0 ){
+		return arNumbers;
+	}else{
+		return getNumbersAll();
+	}
+}
+
+function getRandomInt(min, max){
+  return Math.floor(Math.random() * (max));
+}
+
+function getRandomNumber(){
+	if( arNumbers.length > 0){
+		numb = getRandomInt(0, arNumbers.length);
+		code = arNumbers.splice(numb, 1);
+		return code;
+	}
+	return -1;
+}
+
+
+function doTimer(){
+
+//	var currentTime = new Date();
+//	var sec = currentTime.getSeconds();
+
+	if(!proceed) {
+		counter = 0;
+		arNumbers = getNumbers();
+		proceed = true;
+		startTimer();
+		startButton.innerHTML = "Stop";
+	}	else {
+		proceed = false;
+		startButton.innerHTML = "Go";
+	}
+}
+
+function showTime(){
+
+	if(!proceed) return false;
+
+	if( arNumbers.length > 0){
+		phNumber.innerHTML = 	getRandomNumber();
+		setTimeout(showTime, timeDelay);
+	}else{
+		phNumber.innerHTML = '';
+		proceed = false;
+		startButton.innerHTML = "Go";
+	}
+}
+
+function startTimer(){
+	setTimeout(showTime, timeDelay);
+}
+</script>
+</body>
+</html>

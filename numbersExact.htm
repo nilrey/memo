@@ -1,0 +1,100 @@
+<html>
+<head>
+<title>Numbers Control</title>
+</head>
+<body>
+<?
+//$arNumbers = array_merge(array('00', '0', '01', '02', '03', '04', '05', '06', '07', '08', '09'), range(10, 99) );
+//shuffle($arNumbers);
+////$arNumbers = array_slice($arNumbers, 0, 20);
+//$strNumbers = ( '"'.implode('","', $arNumbers).'"' );
+?>
+<style>#placeholderNumber{font-family: Verdana; font-size: 22; font-weight: bold}</style>
+<p id="placeholderNumber"></p>
+<p>
+<button id="startButton" onclick="doTimer()">Go</button>
+</p>
+<p>
+<input type="text" id="numbersList" value="32-35">
+</p>
+
+<script>
+var counter = 0;
+var proceed = false;
+var timeDelay = 1500;
+//var arNumbers = Array(101);
+var phNumber = document.getElementById('placeholderNumber');
+var startButton = document.getElementById('startButton');
+var numbersList = document.getElementById('numbersList');
+
+function getNumbers(){
+	var strNumbers = numbersList.value.replace(/\s/g, "");
+	arNumbers = strNumbers.split(',');
+	j= 0;
+	for( i in arNumbers){
+		var isDiaposone = arNumbers[i].indexOf('-');
+		if( isDiaposone > 0){
+			min = arNumbers[i].substr(0, isDiaposone);
+			max = arNumbers[i].substr(isDiaposone+1);
+			if(min < max){
+				for(j=min;  j<max; j++){
+					arNumbers.splice(1, 0, j);
+				}
+				arNumbers[i] = max;
+			}
+		}
+	}
+	return arNumbers;
+}
+
+function getRandomInt(min, max){
+  return Math.floor(Math.random() * (max));
+}
+
+function getRandomNumber(){
+	if( arNumbers.length > 0){
+		numb = getRandomInt(0, arNumbers.length);
+		code = arNumbers.splice(numb, 1);
+		return code;
+	}
+	return -1;
+}
+
+
+function doTimer(){
+
+//	var currentTime = new Date();
+//	var sec = currentTime.getSeconds();
+
+	if(!proceed) {
+		counter = 0;
+		arNumbers = getNumbers();
+		proceed = true;
+		startTimer();
+		startButton.innerHTML = "Stop";
+	}	else {
+		proceed = false;
+		startButton.innerHTML = "Go";
+	}
+}
+
+function showTime(){
+
+	if(!proceed) return false;
+
+	if( arNumbers.length > 0){
+		phNumber.innerHTML = 	getRandomNumber();
+		setTimeout(showTime, timeDelay);
+	}else{
+		phNumber.innerHTML = '';
+		proceed = false;
+		startButton.innerHTML = "Go";
+	}
+}
+
+function startTimer(){
+	setTimeout(showTime, timeDelay);
+}
+</script>
+</body>
+</html>
